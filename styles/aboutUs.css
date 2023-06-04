@@ -1,0 +1,27 @@
+#eslogan{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 300px;
+    background-color: var(--azul);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+}
+#eslogan h2{
+    color: white;
+    margin: 0px;
+    font-size: 50px;
+}
+#eslogan span{
+    font-size: 24px;
+}
+#info{
+    background-color: var(--grisClaro);
+    margin-top: 10px;
+    border-radius: 10px;
+}
+p{
+    line-height: 2;
+}
