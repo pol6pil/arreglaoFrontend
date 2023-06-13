@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-06-2023 a las 13:16:22
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.1.12
+-- Tiempo de generación: 13-06-2023 a las 21:51:44
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,11 +30,12 @@ USE `reparaciones`;
 --
 
 DROP TABLE IF EXISTS `categorias`;
-CREATE TABLE `categorias` (
-  `id_categoria` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `categorias` (
+  `id_categoria` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
-  `imagen` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `imagen` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_categoria`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `categorias`
@@ -58,11 +59,12 @@ INSERT INTO `categorias` (`id_categoria`, `nombre`, `imagen`) VALUES
 --
 
 DROP TABLE IF EXISTS `electrodomestico`;
-CREATE TABLE `electrodomestico` (
-  `id_electrodomestico` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `electrodomestico` (
+  `id_electrodomestico` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
-  `imagen` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `imagen` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_electrodomestico`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `electrodomestico`
@@ -82,8 +84,8 @@ INSERT INTO `electrodomestico` (`id_electrodomestico`, `nombre`, `imagen`) VALUE
 --
 
 DROP TABLE IF EXISTS `guias`;
-CREATE TABLE `guias` (
-  `id_guia` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `guias` (
+  `id_guia` int(11) NOT NULL AUTO_INCREMENT,
   `imagen` varchar(255) DEFAULT NULL,
   `nombre` varchar(100) NOT NULL,
   `introduccion` mediumtext NOT NULL,
@@ -92,16 +94,20 @@ CREATE TABLE `guias` (
   `email` varchar(255) NOT NULL,
   `duracion` int(11) NOT NULL,
   `dificultad` int(11) NOT NULL,
-  `aceptada` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `aceptada` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_guia`),
+  KEY `fk_guiaPieza` (`id_pieza`),
+  KEY `fk_guiaElectrodomestico` (`id_electrodomestico`),
+  KEY `fk_guiaUsuario` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `guias`
 --
 
 INSERT INTO `guias` (`id_guia`, `imagen`, `nombre`, `introduccion`, `id_pieza`, `id_electrodomestico`, `email`, `duracion`, `dificultad`, `aceptada`) VALUES
-(9, 'files1152159-1684430021392.PNG', 'Reemplazo de Joystick de Nintendo Switch', 'El interruptor de Nintendo viene con dos mandos Joy-Con. Esta guía muestra cómo reemplazar el joystick del Joy-Con izquierdo. El procedimiento para reparar el Joy-Con derecho es diferente, así que asegúrese de seguir el conjunto correcto de instrucciones para su mando.', 1, 2, 'pol6pil@gmail.com', 30, 1, 0),
-(15, 'files2910354-1684943076025.PNG', 'Reemplazo de ventilador de Nintendo Switch', 'Con esta guía aprenderemos a reemplazar el ventilador de la Nintendo Swtich', 2, 2, 'pol6pil@gmail.com', 75, 1, 0);
+(15, 'files2910354-1684943076025.PNG', 'Reemplazo de ventilador de Nintendo Switch', 'Con esta guía aprenderemos a reemplazar el ventilador de la Nintendo Swtich', 2, 2, 'pol6pil@gmail.com', 75, 1, 0),
+(16, 'files8643992-1686499062980.PNG', 'Reemplazo del joystick Joy-Con', 'La Nintendo Switch viene con dos mandos Joy-Con. Esta guía muestra cómo reemplazar el joystick del Joy-Con izquierdo . El procedimiento para reparar el Joy-Con derecho es diferente, así que asegúrese de seguir el conjunto correcto de instrucciones para su controlador.\r\n\r\n', 1, 2, 'pol6pil@gmail.com', 30, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -110,27 +116,37 @@ INSERT INTO `guias` (`id_guia`, `imagen`, `nombre`, `introduccion`, `id_pieza`, 
 --
 
 DROP TABLE IF EXISTS `instrucciones`;
-CREATE TABLE `instrucciones` (
-  `id_instruccion` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `instrucciones` (
+  `id_instruccion` int(11) NOT NULL AUTO_INCREMENT,
   `instruccion` varchar(255) NOT NULL,
   `tipo` int(11) NOT NULL,
-  `id_paso` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_paso` int(11) NOT NULL,
+  PRIMARY KEY (`id_instruccion`),
+  KEY `fk_instruccionpaso` (`id_paso`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `instrucciones`
 --
 
 INSERT INTO `instrucciones` (`id_instruccion`, `instruccion`, `tipo`, `id_paso`) VALUES
-(2, 'Quita los 4 tornillos tri-wing de la parte trasera del Joy-Con', 0, 9),
-(3, 'Es buena idea tener los tornillos organizados para después saber que tornillos utilizar.', 1, 9),
 (9, 'Presiona el botón trasero que tienen los Joy Cons', 0, 14),
 (10, 'Mientras tienes el botón presionado, desliza el Joy Con hacia arriba hasta que salga', 0, 14),
 (11, 'Quitas los tornillos con un destornillador Tri-Wing', 0, 15),
 (12, 'Es aconsejable que tengas organizados los tornillos', 1, 15),
-(18, 'Inserta una púa de apertura en la costura en el borde inferior del controlador (frente a los botones L y ZL).', 0, 16),
-(19, 'Desliza lentamente el borde plano de tu abertura y levanta el costado del Joy-Con.', 0, 16),
-(20, '\nTenga cuidado de no deslizar la púa de apertura demasiado adentro del Joy-Con. Esto puede dañar los componentes internos. El panel posterior se afloja con bastante facilidad, por lo que no se necesita mucha presión.', 1, 16);
+(27, 'Retire los cuatro tornillos Tri-Point Y00 del panel posterior del Joy-Con', 0, 20),
+(28, 'Cada uno de estos tornillos tiene una longitud de 6,2 mm, ¡pero sigue siendo una buena idea mantenerlos organizados y asegurarse de que vuelvan a colocarse en sus lugares correctos', 1, 20),
+(29, 'Inserta una púa de apertura en la costura en el borde inferior del controlador (frente a los botones L y ZL).', 0, 21),
+(30, 'Desliza lentamente el borde plano de tu abertura y levanta el costado del Joy-Con', 0, 21),
+(31, 'Tenga cuidado de no deslizar la púa de apertura demasiado adentro del Joy-Con. Esto puede dañar los componentes internos. El panel posterior se afloja con bastante facilidad, por lo que no se necesita mucha presión', 1, 21),
+(32, 'Con el riel de carga de espaldas a ti, abre el Joy-Con como un libro', 0, 22),
+(33, 'No intente quitar completamente el panel posterior todavía. Todavía hay dos cables que conectan el riel de carga a la placa base', 2, 22),
+(34, 'Usa un spudger para levantar suavemente el conector de la batería de su zócalo en la placa base. Esto evitará que el Joy-Con se encienda durante la reparación.', 0, 23),
+(35, 'Ten mucho cuidado al levantar el conector; si no sale con el spudger, intenta tirar suavemente de los cables hacia arriba desde la placa para desconectarlo', 2, 23),
+(36, 'Retire los dos tornillos Phillips #00 de 3,5 mm del joystick', 0, 24),
+(37, 'Retire con cuidado el joystick de su alojamiento', 0, 25),
+(38, 'Hay una junta negra delgada alrededor del orificio donde el joystick atraviesa el Joy-Con. ¡Haga todo lo posible por no tocar esta junta mientras retira el joystick', 0, 25),
+(39, 'Una vez que el Joy-Con esté completamente reensamblado, conéctalo a tu Nintendo Switch y calibra el nuevo joystick . Además, es posible que deba reiniciar su Switch manteniendo presionado el botón de encendido durante 10 a 15 segundos hasta que se apague ', 1, 25);
 
 -- --------------------------------------------------------
 
@@ -139,13 +155,15 @@ INSERT INTO `instrucciones` (`id_instruccion`, `instruccion`, `tipo`, `id_paso`)
 --
 
 DROP TABLE IF EXISTS `opciones_piezas`;
-CREATE TABLE `opciones_piezas` (
-  `id_opcion` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `opciones_piezas` (
+  `id_opcion` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(70) NOT NULL,
   `imagen` varchar(255) DEFAULT NULL,
   `precio` double NOT NULL,
-  `id_pieza` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_pieza` int(11) NOT NULL,
+  PRIMARY KEY (`id_opcion`),
+  KEY `fk_opciones` (`id_pieza`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `opciones_piezas`
@@ -179,22 +197,28 @@ INSERT INTO `opciones_piezas` (`id_opcion`, `nombre`, `imagen`, `precio`, `id_pi
 --
 
 DROP TABLE IF EXISTS `pasos`;
-CREATE TABLE `pasos` (
-  `id_paso` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pasos` (
+  `id_paso` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
   `imagen` varchar(255) DEFAULT NULL,
-  `id_guia` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_guia` int(11) NOT NULL,
+  PRIMARY KEY (`id_paso`),
+  KEY `fk_guiapaso` (`id_guia`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pasos`
 --
 
 INSERT INTO `pasos` (`id_paso`, `nombre`, `imagen`, `id_guia`) VALUES
-(9, 'Quitar tornillos', 'files4647600-1684430021397.PNG', 9),
 (14, 'Quitar los Joy Cons', 'files4462939-1684943076030.PNG', 15),
 (15, 'Quita los tornillos de la carcasa', 'files4129051-1684943076039.PNG', 15),
-(16, '', 'files91350-1685875547382.PNG', 9);
+(20, 'Joystick izquierdo', 'files3025642-1686499062984.PNG', 16),
+(21, '', 'files8087100-1686499149158.PNG', 16),
+(22, '', 'files4487016-1686499149170.PNG', 16),
+(23, '', 'files5748856-1686499233039.PNG', 16),
+(24, '', 'files8236582-1686499233057.PNG', 16),
+(25, '', 'files6608684-1686499233063.PNG', 16);
 
 -- --------------------------------------------------------
 
@@ -203,11 +227,13 @@ INSERT INTO `pasos` (`id_paso`, `nombre`, `imagen`, `id_guia`) VALUES
 --
 
 DROP TABLE IF EXISTS `pedidos`;
-CREATE TABLE `pedidos` (
-  `id_pedido` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pedidos` (
+  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date NOT NULL,
-  `email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_pedido`),
+  KEY `fk_pedidoUsuario` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pedidos`
@@ -220,7 +246,10 @@ INSERT INTO `pedidos` (`id_pedido`, `fecha`, `email`) VALUES
 (10, '2023-06-03', 'pol6pil@gmail.com'),
 (11, '2023-06-03', 'pol6pil@gmail.com'),
 (12, '2023-06-03', 'pol6pil@gmail.com'),
-(13, '2023-06-03', 'pol6pil@gmail.com');
+(13, '2023-06-03', 'pol6pil@gmail.com'),
+(14, '2023-06-05', 'pol6pil@gmail.com'),
+(15, '2023-06-13', 'pol6pil@gmail.com'),
+(16, '2023-06-13', 'pol6pil@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -229,12 +258,15 @@ INSERT INTO `pedidos` (`id_pedido`, `fecha`, `email`) VALUES
 --
 
 DROP TABLE IF EXISTS `pedido_pieza`;
-CREATE TABLE `pedido_pieza` (
+CREATE TABLE IF NOT EXISTS `pedido_pieza` (
   `id_pedido` int(11) NOT NULL,
   `id_pieza` int(11) NOT NULL,
   `id_opcion` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `precio` double NOT NULL
+  `precio` double NOT NULL,
+  KEY `fk_pedido_pieza` (`id_pieza`),
+  KEY `fk_pedidoOpcion` (`id_opcion`),
+  KEY `fk_pedido` (`id_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -253,7 +285,11 @@ INSERT INTO `pedido_pieza` (`id_pedido`, `id_pieza`, `id_opcion`, `cantidad`, `p
 (11, 3, 7, 2, 21.99),
 (12, 8, 13, 1, 4.99),
 (13, 7, 12, 3, 5.99),
-(13, 5, 9, 1, 5.99);
+(13, 5, 9, 1, 5.99),
+(14, 3, 6, 1, 15.99),
+(15, 1, 1, 3, 11.49),
+(16, 1, 1, 1, 11.49),
+(16, 1, 4, 1, 15.99);
 
 -- --------------------------------------------------------
 
@@ -262,16 +298,19 @@ INSERT INTO `pedido_pieza` (`id_pedido`, `id_pieza`, `id_opcion`, `cantidad`, `p
 --
 
 DROP TABLE IF EXISTS `piezas`;
-CREATE TABLE `piezas` (
-  `id_pieza` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `piezas` (
+  `id_pieza` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
   `descripcion` text NOT NULL,
   `garantia` int(11) DEFAULT NULL,
   `advertencia` text DEFAULT NULL,
   `nota` text DEFAULT NULL,
   `id_categoria` int(11) NOT NULL,
-  `id_electrodomestico` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_electrodomestico` int(11) NOT NULL,
+  PRIMARY KEY (`id_pieza`),
+  KEY `fk_piezaCategoria` (`id_categoria`),
+  KEY `fk_piezaElectrodomestico` (`id_electrodomestico`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `piezas`
@@ -300,24 +339,29 @@ INSERT INTO `piezas` (`id_pieza`, `nombre`, `descripcion`, `garantia`, `adverten
 --
 
 DROP TABLE IF EXISTS `reviews`;
-CREATE TABLE `reviews` (
-  `id_review` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `reviews` (
+  `id_review` int(11) NOT NULL AUTO_INCREMENT,
   `titulo` varchar(50) NOT NULL,
   `puntuacion` double NOT NULL,
   `fecha` date NOT NULL,
   `subtitulo` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `id_pieza` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id_pieza` int(11) NOT NULL,
+  PRIMARY KEY (`id_review`),
+  KEY `fk_usuario_review` (`email`),
+  KEY `fk_review_pieza` (`id_pieza`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `reviews`
 --
 
 INSERT INTO `reviews` (`id_review`, `titulo`, `puntuacion`, `fecha`, `subtitulo`, `email`, `id_pieza`) VALUES
-(1, 'Como nuevo', 4, '2023-05-25', 'He reemplazado el ventilador y por ahora funciona bien', 'pol6pil@gmail.com', 2),
 (2, 'Ha arreglado el drift', 4, '2023-05-25', 'El Joy Con ahora funciona a la perfección gracias al Joystick nuevo', 'pol6pil@gmail.com', 1),
-(3, 'Como nuevo', 5, '2023-05-29', 'El mando esta como nuevo después de reemplazar el JoyStick.', 'Thug@Maginicent', 1);
+(4, 'De inutilizable a como nueva', 4, '2023-06-05', 'Antes mi Nintendo Swtich no podía leer juegos por culpa de que tenia roto el lector de tarjetas, ahora que esta reemplazado ya puedo utilizar la consola de nuevo.', 'pol6pil@gmail.com', 3),
+(6, 'Funciona a la perfeccion', 4, '2023-06-09', 'Ahora la consola puede durar encendida el doble de lo que lo hacia antes', 'Thug@Maginicent', 6),
+(9, 'Funcionan a la perfección', 5, '2023-06-10', 'Ahora puedo utilizar la consola', 'Thug@Maginicent', 1),
+(11, 'rfgrfgh', 1, '2023-06-13', 'fddfgdf', 'pol6pil@gmail.com', 7);
 
 -- --------------------------------------------------------
 
@@ -326,7 +370,7 @@ INSERT INTO `reviews` (`id_review`, `titulo`, `puntuacion`, `fecha`, `subtitulo`
 --
 
 DROP TABLE IF EXISTS `usuarios`;
-CREATE TABLE `usuarios` (
+CREATE TABLE IF NOT EXISTS `usuarios` (
   `email` varchar(255) NOT NULL,
   `nombre` varchar(70) NOT NULL,
   `saldo` double NOT NULL,
@@ -334,7 +378,8 @@ CREATE TABLE `usuarios` (
   `apellido1` varchar(100) NOT NULL,
   `apellido2` varchar(100) NOT NULL,
   `esAdmin` tinyint(1) NOT NULL DEFAULT 0,
-  `pass` varchar(255) NOT NULL
+  `pass` varchar(255) NOT NULL,
+  PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -343,149 +388,10 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`email`, `nombre`, `saldo`, `foto`, `apellido1`, `apellido2`, `esAdmin`, `pass`) VALUES
 ('admin@admin', 'admin', 300, NULL, 'administrador', '', 1, '$2b$10$b7xLtBalfyzNwyP0goyWduXz08qG8NJyAVGfm7R/YnpJnueCLZYSC'),
-('pol6pil@gmail.com', 'pol', 3527.2000000000003, 'files6774689-1684936804995.jfif', 'bosch', 'arcas', 0, '$2b$10$xxIy/p93.BaV6pj/pIbq5.AwhAh0xNbXm3KFO5eoVjtwoP/XmAgxu'),
-('Thug@Maginicent', 'Thugnificent', 888.51, 'files3345739-1685015181094.png', 'Jenkins', '', 0, '$2b$10$TCG5dgrvIuSj2rOMMIUZRukUCsnkUcreXlRSfWMou6dq4EvnFs9n.');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `categorias`
---
-ALTER TABLE `categorias`
-  ADD PRIMARY KEY (`id_categoria`);
-
---
--- Indices de la tabla `electrodomestico`
---
-ALTER TABLE `electrodomestico`
-  ADD PRIMARY KEY (`id_electrodomestico`);
-
---
--- Indices de la tabla `guias`
---
-ALTER TABLE `guias`
-  ADD PRIMARY KEY (`id_guia`),
-  ADD KEY `fk_guiaPieza` (`id_pieza`),
-  ADD KEY `fk_guiaElectrodomestico` (`id_electrodomestico`),
-  ADD KEY `fk_guiaUsuario` (`email`);
-
---
--- Indices de la tabla `instrucciones`
---
-ALTER TABLE `instrucciones`
-  ADD PRIMARY KEY (`id_instruccion`),
-  ADD KEY `fk_instruccionpaso` (`id_paso`);
-
---
--- Indices de la tabla `opciones_piezas`
---
-ALTER TABLE `opciones_piezas`
-  ADD PRIMARY KEY (`id_opcion`),
-  ADD KEY `fk_opciones` (`id_pieza`);
-
---
--- Indices de la tabla `pasos`
---
-ALTER TABLE `pasos`
-  ADD PRIMARY KEY (`id_paso`),
-  ADD KEY `fk_guiapaso` (`id_guia`);
-
---
--- Indices de la tabla `pedidos`
---
-ALTER TABLE `pedidos`
-  ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `fk_pedidoUsuario` (`email`);
-
---
--- Indices de la tabla `pedido_pieza`
---
-ALTER TABLE `pedido_pieza`
-  ADD KEY `fk_pedido_pieza` (`id_pieza`),
-  ADD KEY `fk_pedidoOpcion` (`id_opcion`),
-  ADD KEY `fk_pedido` (`id_pedido`);
-
---
--- Indices de la tabla `piezas`
---
-ALTER TABLE `piezas`
-  ADD PRIMARY KEY (`id_pieza`),
-  ADD KEY `fk_piezaCategoria` (`id_categoria`),
-  ADD KEY `fk_piezaElectrodomestico` (`id_electrodomestico`);
-
---
--- Indices de la tabla `reviews`
---
-ALTER TABLE `reviews`
-  ADD PRIMARY KEY (`id_review`),
-  ADD KEY `fk_usuario_review` (`email`),
-  ADD KEY `fk_review_pieza` (`id_pieza`);
-
---
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`email`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `categorias`
---
-ALTER TABLE `categorias`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT de la tabla `electrodomestico`
---
-ALTER TABLE `electrodomestico`
-  MODIFY `id_electrodomestico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT de la tabla `guias`
---
-ALTER TABLE `guias`
-  MODIFY `id_guia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT de la tabla `instrucciones`
---
-ALTER TABLE `instrucciones`
-  MODIFY `id_instruccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
--- AUTO_INCREMENT de la tabla `opciones_piezas`
---
-ALTER TABLE `opciones_piezas`
-  MODIFY `id_opcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- AUTO_INCREMENT de la tabla `pasos`
---
-ALTER TABLE `pasos`
-  MODIFY `id_paso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT de la tabla `pedidos`
---
-ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
---
--- AUTO_INCREMENT de la tabla `piezas`
---
-ALTER TABLE `piezas`
-  MODIFY `id_pieza` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-
---
--- AUTO_INCREMENT de la tabla `reviews`
---
-ALTER TABLE `reviews`
-  MODIFY `id_review` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+('correo@gmail.com', 'usuario', 0, NULL, 'apellido', '', 0, '$2b$10$Agud2YYF1m5GEsw54FlKXu/BCQYuUckptgOdBAP.uJAT78fTPCREm'),
+('pol6pil@gmail.com', 'pol', 4049.263, 'files7177893-1686662399508.png', 'bosch', 'arcas', 0, '$2b$10$xxIy/p93.BaV6pj/pIbq5.AwhAh0xNbXm3KFO5eoVjtwoP/XmAgxu'),
+('Thug@Maginicent', 'Thugnificent', 888.51, 'files3345739-1685015181094.png', 'Jenkins', '', 0, '$2b$10$TCG5dgrvIuSj2rOMMIUZRukUCsnkUcreXlRSfWMou6dq4EvnFs9n.'),
+('usuario@gmai.com', 'usuario', 0, NULL, 'apellido', '', 0, '$2b$10$H7BS/Y5Gb9oK8i929l88meZ.52pM.PhpQwLXkx/TxwiMx1SVlyjCC');
 
 --
 -- Restricciones para tablas volcadas
