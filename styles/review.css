@@ -7,9 +7,12 @@
 .rating li {
     list-style-type: none;
 }
+#title{
+    width: 300px;
+}
 
 .rating-item {
-    border: 1px solid white;
+    border: 1px solid transparent;
     cursor: pointer;
     font-size: 2em;
     color: var(--azul);

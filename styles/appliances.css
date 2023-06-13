@@ -41,3 +41,9 @@ section{
 #appliances article img{
     max-height: 150px;
 }
+
+@media (max-width: 1200px) {
+    #appliances{
+        grid-template-columns: 1fr;
+    }
+}

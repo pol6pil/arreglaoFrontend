@@ -39,3 +39,19 @@ aside{
     flex-direction: column;
     gap: 5px;
 }
+
+@media (max-width: 1200px) {
+    section{
+        display: flex;
+        flex-direction: column;
+    }
+    .partDisplay a{
+        width: 200px;
+    }
+    .partDisplay img{
+        min-width: 200px;
+    }
+    #partes{
+        grid-template-columns: repeat(2,1fr);
+    }
+}

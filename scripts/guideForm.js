@@ -29,10 +29,7 @@ async function insertGuide (formData) {
     body: formData // Payload is formData object
   })
   const json = await res.json()
-  if (json.id !== undefined) {
-    window.alert('Pieza insertada exitosamente')
-    //window.location.href = './index.html'
-  }
+  return json
 }
 async function updateGuide (id, formData) {
   const res = await fetch(`http://localhost/guides/${id}`, {
@@ -41,7 +38,8 @@ async function updateGuide (id, formData) {
   })
   const json = await res.json()
   if (json.id !== undefined) {
-    //window.location.href = './index.html'
+    window.alert('Guia editada exitosamente')
+    window.location.href = './index.html'
   }
 }
 async function deleteGuide (id) {
@@ -51,7 +49,7 @@ async function deleteGuide (id) {
   const json = await res.json()
   if (json.message === 'delete successful') {
     window.alert('Pieza borrada exitosamente')
-    // window.location.href = './index.html'
+    window.location.href = './index.html'
   }
 }
 
@@ -282,7 +280,7 @@ function addInstructionForm (div, i, stepNum, isUpdate, id) {
       div.style.display = 'none'
     }
     // Si el contenedor es de clase step y no stepUpdate lo eliminaremos de la interfaz
-    div = e.target.closest('.instruction:not(.instructionUpdate)')
+    div = e.target.closest('.stepInstruction:not(.instructionUpdate)')
     if (div !== null) {
       div.remove()
     }
@@ -316,7 +314,7 @@ if (id > 0) {
     e.preventDefault()
     if (window.confirm('¿Está seguro de que quiere borrar la guia de manera permanente?') === true) {
       deleteGuide(id)
-      window.location.href = './index.html'
+      //window.location.href = './index.html'
     }
   }
   const delDiv = document.querySelector('#commands')
@@ -330,7 +328,7 @@ addStepButton.onclick = function (e) {
 }
 
 // Evento submit del formulario
-form.onsubmit = (e) => {
+form.onsubmit = async (e) => {
   e.preventDefault()
   // Prevents HTML handling submission
   const steps = document.querySelectorAll('.stepUpdate, .step')
@@ -406,11 +404,18 @@ form.onsubmit = (e) => {
   formData.append('steps', stepsJson)
   if (howManySteps() > 0) {
     if (id > 0) {
-      updateGuide(id, formData)
+      const json = await updateGuide(id, formData)
+      if (json.id !== undefined) {
+        window.alert('Guia editada exitosamente')
+        window.location.href = './index.html'
+      }
     } else {
-      insertGuide(formData)
+      const json = await insertGuide(formData)
+      if (json.id !== undefined) {
+        window.alert('Guia insertada exitosamente')
+        window.location.href = './index.html'
+      }
     }
-    window.location.href = './index.html'
   } else {
     window.alert('La guia necesita como mínimo 1 paso')
   }

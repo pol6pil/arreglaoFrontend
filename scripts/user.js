@@ -74,7 +74,8 @@ async function showPart (div, partId, optionId, quantity, price) {
 async function getUserOrders (email) {
   console.log(email)
   const res = await fetch(`http://localhost/orders/${email}`)
-  return await res.json()
+  const orders = await res.json()
+  return orders.reverse()
 }
 
 async function showGuides (email) {
@@ -138,7 +139,6 @@ addBalanceButton.onclick = () => {
 
 const changePfpButton = document.querySelector('#changePfp')
 changePfpButton.onclick = async (e) => {
-  e.preventDefault()
   const imageInput = document.querySelector('#imageInput')
   if (imageInput.files.length > 0) {
     // Si hay imagen, la actualizamos
@@ -151,6 +151,8 @@ changePfpButton.onclick = async (e) => {
 
     // Actualizamos el usuario
     window.localStorage.setItem('user', JSON.stringify(user))
+    //Actualizamos la pagina
+    window.location.href = './user.html'
   } else {
     // Si no hay imagen lo mostramos
     window.alert('No se ha seleccionado ninguna imagen para cambiar')

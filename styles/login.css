@@ -3,8 +3,16 @@ main form{
     flex-direction: column;
     margin: auto;
     width: fit-content;
-    align-items: flex-start;
-    gap: 30px;
+    align-items: center;
+    gap: 20px;
+    min-width: 400px;
+    background-color: var(--grisClaro);
+    padding: 20px;
+    border-radius: 20px;
+}
+main form div {
+    display: flex;
+    flex-direction: column;
 }
 h1{
     text-align: center;

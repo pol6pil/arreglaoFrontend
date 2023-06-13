@@ -104,12 +104,16 @@ function buyCart (cart) {
       if (user.balance >= getTotal(cart)) {
         // Restamos el saldo al usuario
         user.balance -= getTotal(cart)
+        // Nos aseguramos de que el balance sean solo 2 decimales
+        user.balance = (Math.round(user.balance * 100) / 100).toFixed(2);
         // Subimos el pedido a la api
         const formData = new FormData()
         formData.append('email', user.email)
         formData.append('date', new Date().toISOString().slice(0, 10))
         formData.append('parts', JSON.stringify(cart))
+        // Guardamos el saldo del usuario en local
         window.localStorage.setItem('user', JSON.stringify(user))
+        
         placeOrder(formData)
         updateBalance(user)
         // Limpiamos el carrito

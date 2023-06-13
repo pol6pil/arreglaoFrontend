@@ -57,3 +57,16 @@ aside div{
     flex-direction: column;
     gap: 15px;
 }
+
+@media (max-width: 1200px) {
+    main{
+        grid-template-columns: 1fr;
+        padding-left: 0px;
+    }
+    aside{
+        grid-row: 1;
+    }
+    aside div{
+        align-items: center;
+    }
+}

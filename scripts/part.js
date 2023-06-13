@@ -189,7 +189,7 @@ async function showReview (review, div) {
     score.append(scoreStar)
     scoreStar.className = 'rating-item'
     scoreStar.setAttribute('data-rate', i + 1)
-    if (i + 1 === review.score) {
+    if (i + 1 === review.rating) {
       scoreStar.classList.add('active')
     }
   }
@@ -219,7 +219,8 @@ function showTotalScore (reviews) {
   for (const review of reviews) {
     sumScore += review.rating
   }
-  span.textContent = `${sumScore / reviews.length}/5`
+  
+  span.textContent = `${(Math.round((sumScore / reviews.length) * 100) / 100).toFixed(1)}/5`
 }
 
 // Funcion para añadir al carrito la pieza

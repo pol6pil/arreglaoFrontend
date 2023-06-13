@@ -12,16 +12,38 @@ async function updateAppliance (formData, id) {
   })
 }
 
+async function deleteAppliance (id) {
+  const res = await fetch(`http://localhost:80/appliances/${id}`, {
+    method: 'DELETE'
+  })
+  const json = await res.json()
+  return json
+}
+
 async function showAppliance (id, form, divImg) {
   const res = await fetch(`http://localhost:80/appliances/${id}`)
   const json = await res.json()
   form.nombre.value = json.name
   const img = document.createElement('img')
-
   img.setAttribute('src', json.imgUrl)
-
   img.alt = json.name
   divImg.append(img)
+
+  const controls = document.querySelector('#controls')
+  const button = document.createElement('button')
+  controls.append(button)
+  button.className = 'eraseButton'
+  button.type = 'button'
+  button.append('Borrar Electrodomestico')
+
+  button.onclick = async () => {
+    if(window.confirm('Esta seguro de que quiere eliminar el electrodomestico de manera permanenente?')){
+      const response = await deleteAppliance(id)
+      if(response.status === 'ok'){
+        window.location.href = './index.html'
+      }
+    }
+  }
 }
 
 // Recibimos el id del URL
@@ -38,7 +60,7 @@ if (id > 0) {
   showAppliance(id, form, divImg)
 }
 
-form.onsubmit = (e) => {
+form.onsubmit = async (e) => {
   e.preventDefault()
   const file = form.imagen
   const formData = new FormData()
@@ -48,9 +70,11 @@ form.onsubmit = (e) => {
   formData.append('files', file.files[0])
 
   if (id > 0) {
-    updateAppliance(formData, id)
+    await updateAppliance(formData, id)
+    window.alert('Electrodomestico editado exitosamente')
   } else {
-    submitAppliance(formData)
+    await submitAppliance(formData)
+    window.alert('Electrodomestico inserado exitosamente')
   }
   window.location.href = './index.html'
 }

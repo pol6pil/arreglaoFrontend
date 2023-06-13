@@ -1,23 +1,43 @@
 'use strict'
 
-function showGoogleApi (div) {
+function showGoogleApi(div) {
   const googleDiv = document.createElement('div')
   googleDiv.id = 'google_translate_element'
   div.append(googleDiv)
 }
 
-async function obtenerPfp (email) {
+async function obtenerPfp(email) {
   const res = await fetch(`http://localhost/users/${email}`)
   const json = await res.json()
   return json.imgUrl
 }
 
 // Mostramos el header de las paginas
-async function mostrarHeader () {
+async function mostrarHeader() {
   const blackBg = document.createElement('div')
   blackBg.classList.add('blackBg')
   const header = document.createElement('header')
   blackBg.append(header)
+  const content = document.createElement('div')
+  content.id = 'content'
+  const mobileControls = document.createElement('div')
+  header.prepend(mobileControls)
+  mobileControls.id = 'mobileControls'
+  const controlsButton = document.createElement('button')
+  mobileControls.append(controlsButton)
+  controlsButton.append('...')
+  controlsButton.type = 'button'
+  controlsButton.onclick = () => {
+    // Estoy orgulloso de esto
+    const show = content.id === 'contentMobile'
+
+    if (!show) {
+      content.id = 'contentMobile'
+    } else {
+      content.id = 'content'
+    }
+  }
+  header.append(content)
   const divLinks = document.createElement('div')
   showGoogleApi(divLinks)
   const aboutUs = document.createElement('a')
@@ -32,8 +52,7 @@ async function mostrarHeader () {
   guides.setAttribute('href', './appliancesGuide.html')
   divLinks.append(guides)
   guides.append('Guias')
-  header.append(divLinks)
-
+  content.append(divLinks)
   const divActions = document.createElement('div')
   const searchForm = document.createElement('form')
   searchForm.name = 'search'
@@ -99,7 +118,7 @@ async function mostrarHeader () {
   if (cart !== null) {
     divActions.append(cart)
   }
-  header.append(divActions)
+  content.append(divActions)
   document.body.prepend(blackBg)
 }
 mostrarHeader()

@@ -1,7 +1,103 @@
 'use strict'
 /* eslint-disable no-eval */
+async function getPfp(email) {
+  const res = await fetch(`http://localhost/users/${email}`)
+  const json = await res.json()
+  return json.imgUrl
+}
 
-async function showCategories (div) {
+async function deleteReview(id) {
+  const res = await fetch(`http://localhost:80/reviews/${id}`, {
+    method: 'DELETE'
+  })
+  return await res.json()
+}
+
+async function showReviews(id) {
+  const section = document.querySelector('#reviews')
+  const sectionHeader = document.createElement('h2')
+  sectionHeader.append('Reseñas')
+  section.append(sectionHeader)
+  const reviews = await getReviews(id)
+  if (reviews.length > 0) {
+    for (const review of reviews) {
+      showReview(review, section)
+    }
+  } else {
+    const span = document.createElement('span')
+    span.textContent = 'Todavía no se ha escrito ninguna reseña!'
+    section.append(span)
+  }
+}
+
+async function showReview(review, div) {
+  const article = document.createElement('article')
+  const userDiv = document.createElement('div')
+  article.append(userDiv)
+  // Mostramos la foto de perfil
+  const pfp = document.createElement('img')
+  userDiv.append(pfp)
+  pfp.className = 'pfpImage'
+  const imgUrl = await getPfp(review.email)
+  pfp.setAttribute('src', imgUrl)
+  // Mostramos el correo
+  const emailSpan = document.createElement('span')
+  userDiv.append(emailSpan)
+  emailSpan.append(review.email)
+
+  // Mostramos la puntuacion
+  const guideTitleDiv = document.createElement('div')
+  article.append(guideTitleDiv)
+  const score = document.createElement('ul')
+  guideTitleDiv.append(score)
+  score.className = 'rating'
+  for (let i = 0; i < 5; i++) {
+    const scoreStar = document.createElement('li')
+    score.append(scoreStar)
+    scoreStar.className = 'rating-item'
+    scoreStar.setAttribute('data-rate', i + 1)
+    if (i + 1 === review.rating) {
+      scoreStar.classList.add('active')
+    }
+  }
+  // Mostramos el titulo
+  const title = document.createElement('h3')
+  guideTitleDiv.append(title)
+  title.textContent = review.title
+
+  // Mostramos el contenido de la review
+  const contentDiv = document.createElement('div')
+  const p = document.createElement('p')
+  p.textContent = review.content
+  contentDiv.append(p)
+  article.append(contentDiv)
+
+  // Creacion del boton para eliminar la reseña
+  const eraseButton = document.createElement('button')
+  eraseButton.type = 'button'
+  eraseButton.append('X')
+  eraseButton.className = 'eraseButton'
+  article.append(eraseButton)
+
+  // Evento para borrar la reseña
+  eraseButton.onclick = async (e) => {
+    if (window.confirm('Esta seguro de que quiere eliminar la reseña de manera permanenente?')) {
+      const response = await deleteReview(review.id)
+      if (response.status === 'ok') {
+        window.location.reload()
+      }
+    }
+  }
+
+  div.append(article)
+}
+
+async function getReviews(id) {
+  const res = await fetch(`http://localhost/reviews/${id}`)
+  return await res.json()
+}
+
+async function showCategories(div) {
   // Creamos el select
   const select = document.createElement('select')
   select.name = 'categoria'
@@ -19,7 +115,7 @@ async function showCategories (div) {
   div.append(select)
 }
 
-async function showAppliances (div) {
+async function showAppliances(div) {
   // Creamos el select
   const select = document.createElement('select')
   select.name = 'electronico'
@@ -37,7 +133,7 @@ async function showAppliances (div) {
   div.append(select)
 }
 
-async function insertPart (formData) {
+async function insertPart(formData) {
   const res = await fetch('http://localhost/parts', {
     method: 'POST',
     body: formData // Payload is formData object
@@ -48,17 +144,18 @@ async function insertPart (formData) {
     window.location.href = './index.html'
   }
 }
-async function updatePart (id, formData) {
+async function updatePart(id, formData) {
   const res = await fetch(`http://localhost/parts/${id}`, {
     method: 'PUT',
     body: formData // Payload is formData object
   })
   const json = await res.json()
   if (json.id !== undefined) {
+    window.alert('Pieza actualizada exitosamente')
     window.location.href = './index.html'
   }
 }
-async function deletePart (id) {
+async function deletePart(id) {
   const res = await fetch(`http://localhost/parts/${id}`, {
     method: 'DELETE'
   })
@@ -70,11 +167,11 @@ async function deletePart (id) {
 }
 
 // Funcion que muestra la parte
-async function showPart (id, form) {
+async function showPart(id, form) {
   // Recibimos la parte de la api
   const res = await fetch(`http://localhost/parts/${id}`)
   const json = await res.json()
-
+  showReviews(id)
   // Rellenamos los campos con la parte
   form.nombre.value = json.name
   form.descripcion.value = json.description
@@ -94,8 +191,6 @@ async function showPart (id, form) {
   }
 
   // Mostramos las opciones de la parte
-
-  let optionsQuantity = 0
   for (const option of json.options) {
     addOptionForm(optionsQuantity, true, option.id)
     eval('form.nombreOpt' + optionsQuantity + '.value = option.name')
@@ -111,7 +206,8 @@ async function showPart (id, form) {
   }
 }
 // Evento del boton para generar un formulario de opcion
-function addOptionForm (i, isUpdate, id) {
+function addOptionForm(i, isUpdate, id) {
+  console.log(i)
   // Generamos el div de la opcion
   const optionsDiv = document.querySelector('#options')
   const optionDiv = document.createElement('div')
@@ -207,7 +303,7 @@ function addOptionForm (i, isUpdate, id) {
       div.style.display = 'none'
     }
     // Si el contenedor es de clase option lo eliminaremos de la interfaz
-    div = e.target.closest('.option')
+    div = e.target.closest('.option:not(.optionUpdate)')
     if (div !== null) {
       div.remove()
     }
@@ -235,7 +331,8 @@ let optionsQuantity = 0
 
 // Si tiene una id, se muestran los datos de la parte
 if (id > 0) {
-  showPart(id, form)
+  // Agregamos un buffer para que no de excepcion
+  setTimeout(() => showPart(id, form), 100)
   // Mostramos el boton para borrar la pieza
   const delButton = document.createElement('button')
   delButton.className = 'eraseButton'
@@ -262,6 +359,7 @@ form.onsubmit = (e) => {
   e.preventDefault()
   // Prevents HTML handling submission
   const options = document.querySelectorAll('.optionUpdate, .option')
+  console.log(options)
   // Creamos un formData al que pasarle todos los datos del formulario
   const formData = new FormData()
 
@@ -278,7 +376,7 @@ form.onsubmit = (e) => {
   for (const option of options) {
     const file = eval('form.imagenOpt' + i)
     // Si la opcion se tiene que actualizar porque ya existia lo marcamos
-    let update = option.className === 'optionUpdate'
+    let update = option.classList.contains('optionUpdate')
     // Si la opcion ha sido borrada de la interfaz
     const isDelete = option.style.display === 'none'
 

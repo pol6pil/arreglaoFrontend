@@ -39,17 +39,23 @@
 }
 #steps article div:last-child{
     display: flex;
+    justify-content: space-between;
 }
 
 #steps article img{
-    max-width: 600px;
+    max-width: 500px;
     width: 100%;
+}
+
+#steps h2{
+    border-bottom: 1px solid var(--grisOscuro);
 }
 
 #steps article ul{
     display: flex;
     flex-direction: column;
     gap: 15px;
+    max-width: 500px;
 }
 #steps article ul li{
     font-size: 20px;
@@ -63,3 +69,9 @@
     font-weight: bold;
 }
 
+@media (max-width: 1200px) {
+    #steps article div:last-child{
+        flex-direction: column;
+        align-items: center;
+    }
+}

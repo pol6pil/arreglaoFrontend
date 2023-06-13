@@ -176,9 +176,7 @@ mostrarPartes(appliance)
 window.onclick = (e) => {
   const dropdownContent = document.querySelector('#ordenarPorDropdown')
   let show = false
-  if (e.target.id !== 'ordenarPorButton') {
-    show = false
-  } else {
+  if (e.target.id === 'ordenarPorButton') {
     // Estoy orgulloso de esto
     show = dropdownContent.style.display === 'none'
   }

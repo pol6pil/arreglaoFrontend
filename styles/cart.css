@@ -37,7 +37,7 @@ main{
     max-width: var(--anchoMax);
     min-width: var(--anchoMin);
     margin: auto;
-    padding: 20px;
+    padding: 0px;
 }
 
 #controls{
@@ -46,4 +46,7 @@ main{
     justify-content: flex-end;
     align-items: center;
     gap: 50px;
+}
+@media (max-width: 1200px) {
+    #products article div{ gap: 5px;}
 }

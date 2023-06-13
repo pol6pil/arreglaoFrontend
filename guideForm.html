@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arreglao - Formulario guia</title>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script src="./scripts/generic/userChecker.js"></script>
     <script src="./scripts/header.js" defer></script>
     <script src="scripts/guideForm.js" defer></script>
@@ -18,7 +25,7 @@
             <form action="" method="post" name="guia">
                 <div>
                     <label for="title">Titulo:</label>
-                    <input type="text" name="title" required>
+                    <input id="title" type="text" name="title" required>
                 </div>
                 <div>
                     <label for="intro">Introducción:</label>

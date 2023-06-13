@@ -8,3 +8,7 @@
     grid-template-columns: repeat(3, 1fr);
     min-height: 600px;
 }
+@media (max-width: 1200px) {
+    #guides{ grid-template-columns: 1fr;}
+    #guides h1{ grid-column: 1;}
+}
